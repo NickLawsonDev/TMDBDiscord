@@ -1,0 +1,11 @@
+C:\Users\nick\Desktop\Dev\TMDBDiscord\bin\Debug\netcoreapp2.0\TMDBDiscord.deps.json
+C:\Users\nick\Desktop\Dev\TMDBDiscord\bin\Debug\netcoreapp2.0\TMDBDiscord.runtimeconfig.json
+C:\Users\nick\Desktop\Dev\TMDBDiscord\bin\Debug\netcoreapp2.0\TMDBDiscord.runtimeconfig.dev.json
+C:\Users\nick\Desktop\Dev\TMDBDiscord\bin\Debug\netcoreapp2.0\TMDBDiscord.dll
+C:\Users\nick\Desktop\Dev\TMDBDiscord\bin\Debug\netcoreapp2.0\TMDBDiscord.pdb
+C:\Users\nick\Desktop\Dev\TMDBDiscord\obj\Debug\netcoreapp2.0\TMDBDiscord.csprojAssemblyReference.cache
+C:\Users\nick\Desktop\Dev\TMDBDiscord\obj\Debug\netcoreapp2.0\TMDBDiscord.csproj.CoreCompileInputs.cache
+C:\Users\nick\Desktop\Dev\TMDBDiscord\obj\Debug\netcoreapp2.0\TMDBDiscord.AssemblyInfoInputs.cache
+C:\Users\nick\Desktop\Dev\TMDBDiscord\obj\Debug\netcoreapp2.0\TMDBDiscord.AssemblyInfo.cs
+C:\Users\nick\Desktop\Dev\TMDBDiscord\obj\Debug\netcoreapp2.0\TMDBDiscord.dll
+C:\Users\nick\Desktop\Dev\TMDBDiscord\obj\Debug\netcoreapp2.0\TMDBDiscord.pdb
