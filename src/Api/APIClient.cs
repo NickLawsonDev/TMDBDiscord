@@ -65,57 +65,11 @@ namespace TMDB
 
             if (results.Results.Count >= 5)
             {
-                for (var i = 0; i < 5; i++)
-                {
-                    try
-                    {
-                        if (results.Results[i].Title != string.Empty)
-                            builder.AddField("Title", results.Results[i].Title);
-
-                        builder.Title = $"Search Results for {searchTerm}";
-                        // if (!result.ReleaseDate.HasValue)
-                        //     builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
-                        // if (result.Popularity > 0)
-                        //     builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
-                        // if (result.Title != string.Empty)
-                        //     builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
-                        // if (result.PosterPath != string.Empty)
-                        //     builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
-
-                        //builders.Add(builder);
-                    }
-                    catch (Exception e)
-                    {
-                        builders.Add(new EmbedBuilder() { Title = $"Title:{results.Results[i].Title}" });
-                    }
-                }
+                MakeMoviesEmbed(5, results, builder, searchTerm, builders);
             }
             else
             {
-                for (var i = 0; i < results.Results.Count; i++)
-                {
-                    try
-                    {
-                        if (results.Results[i].Title != string.Empty)
-                            builder.AddField("Title", results.Results[i].Title);
-
-                        builder.Title = $"Search Results for {searchTerm}";
-                        // if (!result.ReleaseDate.HasValue)
-                        //     builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
-                        // if (result.Popularity > 0)
-                        //     builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
-                        // if (result.Title != string.Empty)
-                        //     builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
-                        // if (result.PosterPath != string.Empty)
-                        //     builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
-
-                        //builders.Add(builder);
-                    }
-                    catch (Exception e)
-                    {
-                        builders.Add(new EmbedBuilder() { Title = $"Title:{results.Results[i].Title}" });
-                    }
-                }
+                MakeMoviesEmbed(results.Results.Count, results, builder, searchTerm, builders);
             }
 
             if (results.Results.Count > 5)
@@ -124,6 +78,34 @@ namespace TMDB
             builders.Add(builder);
 
             return builders;
+        }
+
+        private void MakeMoviesEmbed(int count, SearchContainer<SearchMovie> results, EmbedBuilder builder, string searchTerm, List<EmbedBuilder> builders)
+        {
+            for (var i = 0; i < count; i++)
+                {
+                    try
+                    {
+                        if (results.Results[i].Title != string.Empty)
+                            builder.AddField("Title", results.Results[i].Title);
+
+                        builder.Title = $"Search Results for {searchTerm}";
+                        // if (!result.ReleaseDate.HasValue)
+                        //     builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
+                        // if (result.Popularity > 0)
+                        //     builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
+                        // if (result.Title != string.Empty)
+                        //     builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
+                        // if (result.PosterPath != string.Empty)
+                        //     builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
+
+                        //builders.Add(builder);
+                    }
+                    catch (Exception e)
+                    {
+                        builders.Add(new EmbedBuilder() { Title = $"Title:{results.Results[i].Title}" });
+                    }
+                }
         }
     }
 }
