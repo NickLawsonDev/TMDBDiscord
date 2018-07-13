@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using TMDbLib.Client;
+using TMDbLib.Objects.Authentication;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Search;
 
@@ -26,23 +27,25 @@ namespace TMDB
 
             Console.WriteLine($"Got { results.Results.Count } results returned");
 
-            if(results.Results.Count >= 1)
+            SearchMovie result;
+            try
             {
-                var result = results.Results.Where(w => w.Title == movie).First();
-                var builder = new EmbedBuilder();
-
-                builder.AddInlineField("Title", result.Title);
-                builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
-                builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
-                builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
-
-                return builder;
-
-            } 
-            else 
-            {
-                return new EmbedBuilder().WithTitle("More then 1 result. Please try a different search term");
+                result = results.Results.Where(w => w.Title.ToLower() == movie.ToLower()).First();
             }
+            catch (Exception e)
+            {
+                return new EmbedBuilder().WithTitle("No movie found. Please try a different search term or searchmultiple");
+            }
+            var builder = new EmbedBuilder();
+            //var rating = await Client.GetMovieAccountStateAsync(result.Id);
+
+            builder.AddInlineField("Title", result.Title);
+            builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
+            builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
+            builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
+            builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
+
+            return builder;
         }
 
         public async Task<List<EmbedBuilder>> SearchMultpleMovies(string searchTerm)
@@ -50,17 +53,75 @@ namespace TMDB
             var builders = new List<EmbedBuilder>();
             SearchContainer<SearchMovie> results = await Client.SearchMovieAsync(searchTerm);
 
-            foreach(var result in results.Results)
+            Console.WriteLine($"Got { results.Results.Count } results returned");
+
+            if (results.Results.Count == 0)
             {
-                var builder = new EmbedBuilder();
-
-                builder.AddInlineField("Title", result.Title);
-                builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
-                builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
-                builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
-
-                builders.Add(builder);
+                builders.Add(new EmbedBuilder() { Title = "No results found. Try a different term" });
+                return builders;
             }
+
+            var builder = new EmbedBuilder();
+
+            if (results.Results.Count >= 5)
+            {
+                for (var i = 0; i < 5; i++)
+                {
+                    try
+                    {
+                        if (results.Results[i].Title != string.Empty)
+                            builder.AddField("Title", results.Results[i].Title);
+
+                        builder.Title = $"Search Results for {searchTerm}";
+                        // if (!result.ReleaseDate.HasValue)
+                        //     builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
+                        // if (result.Popularity > 0)
+                        //     builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
+                        // if (result.Title != string.Empty)
+                        //     builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
+                        // if (result.PosterPath != string.Empty)
+                        //     builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
+
+                        //builders.Add(builder);
+                    }
+                    catch (Exception e)
+                    {
+                        builders.Add(new EmbedBuilder() { Title = $"Title:{results.Results[i].Title}" });
+                    }
+                }
+            }
+            else
+            {
+                for (var i = 0; i < results.Results.Count; i++)
+                {
+                    try
+                    {
+                        if (results.Results[i].Title != string.Empty)
+                            builder.AddField("Title", results.Results[i].Title);
+
+                        builder.Title = $"Search Results for {searchTerm}";
+                        // if (!result.ReleaseDate.HasValue)
+                        //     builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
+                        // if (result.Popularity > 0)
+                        //     builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
+                        // if (result.Title != string.Empty)
+                        //     builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
+                        // if (result.PosterPath != string.Empty)
+                        //     builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
+
+                        //builders.Add(builder);
+                    }
+                    catch (Exception e)
+                    {
+                        builders.Add(new EmbedBuilder() { Title = $"Title:{results.Results[i].Title}" });
+                    }
+                }
+            }
+
+            if (results.Results.Count > 5)
+                builder.AddField($"Plus {results.Results.Count - 5} more at ", $"https://www.themoviedb.org/search?language=en-US&query={searchTerm.Replace(" ", "-")}");
+
+            builders.Add(builder);
 
             return builders;
         }
