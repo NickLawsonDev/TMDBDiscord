@@ -87,19 +87,13 @@ namespace TMDB
                     try
                     {
                         if (results.Results[i].Title != string.Empty)
+                        {
                             builder.AddField("Title", results.Results[i].Title);
+                            if(results.Results.Count <= 5)
+                                builder.AddField("URL",$"https://www.themoviedb.org/movie/{results.Results[i].Id}-{results.Results[i].Title.Replace(" ", "-")}language=en-US");
+                        }
 
                         builder.Title = $"Search Results for {searchTerm}";
-                        // if (!result.ReleaseDate.HasValue)
-                        //     builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
-                        // if (result.Popularity > 0)
-                        //     builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
-                        // if (result.Title != string.Empty)
-                        //     builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
-                        // if (result.PosterPath != string.Empty)
-                        //     builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
-
-                        //builders.Add(builder);
                     }
                     catch (Exception e)
                     {
