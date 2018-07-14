@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "a3ae066f3f6996c0f87884629fc22c788e65bc92"
+    "signature": "a11369d55ebac078b28692e5755174b6d15f640b"
   },
   "compilationOptions": {},
   "targets": {
@@ -10,7 +10,7 @@
         "dependencies": {
           "Discord.Net": "1.0.2",
           "Discord.Net.WebSocket": "1.0.2",
-          "TMDbLib": "1.0.0"
+          "TMDbLib": "1.2.0-alpha"
         },
         "runtime": {
           "TMDBDiscord.dll": {}
@@ -1072,12 +1072,13 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
-      "TMDbLib/1.0.0": {
+      "TMDbLib/1.2.0-alpha": {
         "dependencies": {
-          "Newtonsoft.Json": "10.0.2"
+          "Newtonsoft.Json": "10.0.2",
+          "System.Net.Http": "4.3.2"
         },
         "runtime": {
-          "lib/netcoreapp1.0/TMDbLib.dll": {}
+          "lib/netstandard1.2/TMDbLib.dll": {}
         }
       }
     }
@@ -1746,12 +1747,12 @@
       "path": "system.xml.xmldocument/4.3.0",
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
     },
-    "TMDbLib/1.0.0": {
+    "TMDbLib/1.2.0-alpha": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rmZM2/OFEiUjqvSvTjSRQkSZ1osJWui68meQE4cIJLZ/SGbzQvI29LLMMdpTfxfr3L9VHWYLShyHd+wxRIuNvg==",
-      "path": "tmdblib/1.0.0",
-      "hashPath": "tmdblib.1.0.0.nupkg.sha512"
+      "sha512": "sha512-0yv4oqNLOUt42Nds6mSJNlwqY/aRkUqHrbDsX0097W5B/kNu+OkOzpiWjkXUVcl2CYk1HegY/Qe9GMmcICbLcw==",
+      "path": "tmdblib/1.2.0-alpha",
+      "hashPath": "tmdblib.1.2.0-alpha.nupkg.sha512"
     }
   }
 }

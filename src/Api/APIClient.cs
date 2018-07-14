@@ -8,6 +8,7 @@ using Discord;
 using TMDbLib.Client;
 using TMDbLib.Objects.Authentication;
 using TMDbLib.Objects.General;
+using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
 
 namespace TMDB
@@ -24,27 +25,25 @@ namespace TMDB
         public async Task<EmbedBuilder> SearchMovie(string movie)
         {
             var embed = new EmbedBuilder();
-            SearchContainer<SearchMovie> results = await Client.SearchMovieAsync(movie);
 
-            Console.WriteLine($"Got { results.Results.Count } results returned");
-
+            Movie details;
             SearchMovie result;
             try
             {
-                result = results.Results.Where(w => w.Title.ToLower() == movie.ToLower()).First();
+                result = FindSingleMovie(movie).Result;
+                details = await Client.GetMovieAsync(result.Id, MovieMethods.Credits);
             }
             catch (Exception e)
             {
                 return new EmbedBuilder().WithTitle("No movie found. Please try a different search term or movies");
             }
             var builder = new EmbedBuilder();
-            //var rating = await Client.GetMovieAccountStateAsync(result.Id);
 
             builder.AddInlineField("Title", result.Title);
             builder.AddInlineField("Release Year", result.ReleaseDate.Value.Year);
-            //builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
+            builder.AddInlineField("Director", details.Credits.Crew.Where(w => w.Job == "Director").First().Name);
             builder.AddInlineField("URL", $"https://www.themoviedb.org/movie/{result.Id}-{result.Title.Replace(" ", "-")}language=en-US");
-            builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.PosterPath}");
+            builder.WithImageUrl($"https://image.tmdb.org/t/p/w92{result.PosterPath}");
 
             return builder;
         }
@@ -112,9 +111,8 @@ namespace TMDB
 
             builder.AddInlineField("Name", result.Name);
             builder.AddInlineField("Known For", sb.ToString());
-            //builder.AddInlineField("Avg Popularity", Math.Round(result.Popularity) + "%");
             builder.AddInlineField("URL", $"https://www.themoviedb.org/person/{result.Id}-{result.Name.Replace(" ", "-")}language=en-US");
-            builder.WithImageUrl($"https://image.tmdb.org/t/p/w500{result.ProfilePath}");
+            builder.WithImageUrl($"https://image.tmdb.org/t/p/w92{result.ProfilePath}");
 
             return builder;
         }
@@ -141,6 +139,40 @@ namespace TMDB
             else
             {
                 MakePeopleEmbed(results.Results.Count, results, builder, searchTerm, builders);
+            }
+
+            if (results.Results.Count > 5)
+                builder.AddField($"Plus {results.Results.Count - 5} more at ", $"https://www.themoviedb.org/search?language=en-US&query={searchTerm.Replace(" ", "-")}");
+
+            builders.Add(builder);
+
+            return builders;
+        }
+
+        public async Task<List<EmbedBuilder>> Similar(string searchTerm)
+        {
+            var builders = new List<EmbedBuilder>();
+            var builder = new EmbedBuilder();            
+
+            SearchMovie result;
+            SearchContainer<SearchMovie> results = new SearchContainer<SearchMovie>();
+            try
+            {
+                result = FindSingleMovie(searchTerm).Result;
+                results = await Client.GetMovieRecommendationsAsync(result.Id);
+            }
+            catch(Exception e)
+            {
+                builders.Add(new EmbedBuilder() { Title = "No results found. Try a different term" });
+            }
+
+            if (results.Results.Count >= 5)
+            {
+                MakeMovieEmbed(5, results, builder, searchTerm, builders);
+            }
+            else
+            {
+                MakeMovieEmbed(results.Results.Count, results, builder, searchTerm, builders);
             }
 
             if (results.Results.Count > 5)
@@ -193,6 +225,25 @@ namespace TMDB
                         builders.Add(new EmbedBuilder() { Title = $"Title:{results.Results[i].Name}" });
                     }
                 }
+        }
+
+        private async Task<SearchMovie> FindSingleMovie(string title)
+        {
+            SearchContainer<SearchMovie> results = await Client.SearchMovieAsync(title);
+
+            Console.WriteLine($"Got { results.Results.Count } results returned");
+
+            SearchMovie result;
+            try
+            {
+                result = results.Results.Where(w => w.Title.ToLower() == title.ToLower()).First();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return result;
         }
     }
 }

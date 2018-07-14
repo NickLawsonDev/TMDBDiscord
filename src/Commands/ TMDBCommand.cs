@@ -29,6 +29,17 @@ namespace TMDB
             }
         }
 
+        [Command("similar"), Summary("Searches for similar movies in the TMDB Api")]
+        public async Task Similar([Summary("The search term")]string term)
+        {
+            var results = await api.Similar(term);
+
+            foreach(var result in results)
+            {
+                await Context.Channel.SendMessageAsync("", false, result);
+            }
+        }
+
         [Command("person"), Summary("Searches for a person in the TMDB Api")]
         public async Task Person([Summary("The search term")]string term)
         {
