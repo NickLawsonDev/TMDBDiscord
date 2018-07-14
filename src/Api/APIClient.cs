@@ -186,14 +186,18 @@ namespace TMDB
         public EmbedBuilder Help()
         {
             var builder = new EmbedBuilder();
-
+            var footer = new EmbedFooterBuilder()
+            {
+                Text = "Open source at https://github.com/NickLawsonDev/TMDBDiscord"
+                
+            };
             builder.WithTitle("Use !t to access the bot");
-            builder.WithAuthor("https://github.com/NickLawsonDev/TMDBDiscord");
             builder.AddField("!t movie 'MOVIE NAME'", "Searches for a movie");
             builder.AddField("!t movies 'SEARCH TERM'", "Searches for movies with a similar name to the search term");
             builder.AddField("!t person 'NAME'", "Searches for a person");
             builder.AddField("!t people 'SEARCH TERM'", "Searches for people with a similar name to the search term");
             builder.AddField("!t similar 'MOVIE NAME'", "Searches for movies that are similar to the movie");
+            builder.Footer = footer;
 
             return builder;
         }
