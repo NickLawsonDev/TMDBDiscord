@@ -183,6 +183,21 @@ namespace TMDB
             return builders;
         }
 
+        public EmbedBuilder Help()
+        {
+            var builder = new EmbedBuilder();
+
+            builder.WithTitle("Use !t to access the bot");
+            builder.WithAuthor("https://github.com/NickLawsonDev/TMDBDiscord");
+            builder.AddField("!t movie 'MOVIE NAME'", "Searches for a movie");
+            builder.AddField("!t movies 'SEARCH TERM'", "Searches for movies with a similar name to the search term");
+            builder.AddField("!t person 'NAME'", "Searches for a person");
+            builder.AddField("!t people 'SEARCH TERM'", "Searches for people with a similar name to the search term");
+            builder.AddField("!t similar 'MOVIE NAME'", "Searches for movies that are similar to the movie");
+
+            return builder;
+        }
+
         private void MakeMovieEmbed(int count, SearchContainer<SearchMovie> results, EmbedBuilder builder, string searchTerm, List<EmbedBuilder> builders)
         {
             for (var i = 0; i < count; i++)

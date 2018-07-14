@@ -58,5 +58,13 @@ namespace TMDB
                 await Context.Channel.SendMessageAsync("", false, result);
             }
         }
+
+        [Command("help"), Summary("Help message")]
+        public async Task Help()
+        {
+            var builder = api.Help();
+
+            await Context.Channel.SendMessageAsync("", false, builder);
+        }
     }
 }
